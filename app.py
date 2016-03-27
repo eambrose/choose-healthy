@@ -3,10 +3,11 @@ from bokeh.embed import components
 from bokeh.plotting import figure, ColumnDataSource
 from bokeh.resources import CDN
 from bokeh.charts import Bar, Line
-from bokeh.io import gridplot
+from bokeh.io import gridplot,vplot
 from bokeh.models import HoverTool
 import pandas as pd
 import numpy as np
+import pickle
 
 app = Flask(__name__)
 
@@ -17,31 +18,8 @@ def main():
 @app.route('/poverty_health')
 def poverty_health():
   page_title = "Poverty and health"
-  xl_file = 'DataDownload.xls'
-  data = pd.ExcelFile(xl_file)
-  sheet_names = data.sheet_names
-  all_dfs = {sheet: data.parse(sheet) for sheet in sheet_names}
-  
-  socioec_df = all_dfs['SOCIOECONOMIC']
-  socioec_df = socioec_df[['State','County','POVRATE10']]
-  health_df = all_dfs['HEALTH']
-  health_df = health_df[['State','County','PCT_DIABETES_ADULTS10','PCT_OBESE_ADULTS10']]
-  health_se_df = pd.merge(socioec_df,health_df,on=['State','County'])
-  health_se_df.columns = ['State','County','Poverty Rate','Adult Diabetes Rate','Adult Obesity Rate']
-  
-  rm_lines = list()
-  for i in range(len(health_se_df['Poverty Rate'])):
-      item1 = health_se_df['Poverty Rate'][i]
-      item2 = health_se_df['Adult Diabetes Rate'][i]
-      item3 = health_se_df['Adult Obesity Rate'][i]
-      if type(item1)==str:
-          rm_lines.append(np.int(i))
-      elif type(item1)==int:
-          continue
-      elif any([np.isnan(item1),np.isnan(item2),np.isnan(item3)]):
-          rm_lines.append(np.int(i))
-  health_se_df = health_se_df.drop(rm_lines)
 
+  health_se_df = pickle.load(open('fig1data.p','rb'))
   health_se_df['Poverty Rate'] = np.float64(health_se_df['Poverty Rate'])
   plot = figure(plot_width=500, plot_height=400,x_axis_label='Poverty Rate',y_axis_label='Adult Obesity Rate',title='Obesity increases with poverty rate - US counties 2010',title_text_font_size='12pt')
   plot.scatter(health_se_df['Poverty Rate'],health_se_df['Adult Obesity Rate'],marker='+',color='DarkSlateGray')
@@ -69,7 +47,7 @@ def poverty_health():
   vals_Y2 = regr2[0]*np.float64(vals_X2) + regr2[1]
   plot2.line(vals_X2,vals_Y2,color='red',line_width=1.5)
 
-  p=gridplot([[plot,plot2]])
+  p=gridplot([[plot],[plot2]])
   script, div = components(p,CDN)
   script=script.strip()
   return render_template('myplot.html', page_title=page_title, script=script, div=div)
@@ -77,63 +55,8 @@ def poverty_health():
 @app.route('/vendor_availability')
 def vendor_availability():
   page_title = "Vendor availability"
-  xl_file = 'DataDownload.xls'
-  data = pd.ExcelFile(xl_file)
-  sheet_names = data.sheet_names
-  all_dfs = {sheet: data.parse(sheet) for sheet in sheet_names}
-
-  stores_df = all_dfs['STORES']
-  stores_df = stores_df[['State','County','GROCPTH12','SNAPSPTH12','SUPERCPTH12',
-                     'CONVSPTH12','SPECSPTH12','WICSPTH12']]
-
-  restaurants_df = all_dfs['RESTAURANTS']
-  restaurants_df = restaurants_df[['State','County', 'FFRPTH12','FSRPTH12']]
-  
-  socioec_df = all_dfs['SOCIOECONOMIC']
-  socioec_df = socioec_df[['State','County','POVRATE10']]
-
-  statelist = list(socioec_df['State'].unique())
-  
-  rmIndex = list()
-  for i in range(len(stores_df)):
-      if stores_df.State[i] not in statelist:
-          rmIndex.append(i)
-  stores_df = stores_df.drop(rmIndex)
-  st_res_df = pd.merge(stores_df,restaurants_df,on=['State','County'])
-  st_res_se_df = pd.merge(st_res_df, socioec_df, on=['State','County'])
-  st_res_se_df.columns = ['State','County','Grocery Store',
-                       'SNAPS Authorized Store','Supercenter',
-                       'Convenience Store','Specialty Store','WIC Authorized Store',
-                       'Fast Food Restaurant','Full Service Restaurant','Poverty Rate']
-
-  rm_lines = list()
-  for i in range(len(st_res_se_df['Poverty Rate'])):
-      item = st_res_se_df['Poverty Rate'][i]
-      if type(item)==str:
-          rm_lines.append(np.int(i))
-      elif type(item)==int:
-          continue
-      elif np.isnan(item):
-          rm_lines.append(np.int(i))
-  st_res_se_df = st_res_se_df.drop(st_res_se_df.index[(rm_lines)])
-
-  percentile_means = pd.DataFrame()
-  for i in range(1,101)[::2]:
-      thresh = np.percentile(st_res_se_df['Poverty Rate'],i)
-      food_subset = st_res_se_df[st_res_se_df['Poverty Rate'] >= thresh]
-      subset_means = np.mean(food_subset[['Grocery Store',
-                                          'SNAPS Authorized Store',
-                                          'Supercenter',
-                                          'Convenience Store',
-                                          'Specialty Store',
-                                          'WIC Authorized Store',
-                                          'Fast Food Restaurant',
-                                          'Full Service Restaurant']])
-      percentile_means[str(i)] = subset_means
-  percentile_means_df = pd.DataFrame(percentile_means).T
-  percentile_means_df['percentile'] = pd.Series(percentile_means_df.index, index = percentile_means_df.index)
-  percentile_means_df = percentile_means_df.head(99)
-
+  percentile_means_df = pickle.load(open('fig2data.p','rb'))
+    
   p = Line(percentile_means_df,  x='percentile',
             y=['Grocery Store',
                'Supercenter',
@@ -191,7 +114,7 @@ def predict_obesity():
   p2.text(2.7,.51,['Drop access'],text_font_size='10pt')
   p2.text(3.6,.51,['Drop availability'], text_font_size='10pt')
 
-  p = gridplot([[p1,p2]])
+  p = gridplot([[p1],[p2]])
   script, div = components(p,CDN)
   return render_template('myplot.html', page_title=page_title, script=script, div=div)
 
@@ -199,45 +122,50 @@ def predict_obesity():
 @app.route('/food_choice')
 def food_choice():
   page_title = "Food choice"
-  xl_file = 'DataDownload.xls'
-  data = pd.ExcelFile(xl_file)
-  sheet_names = data.sheet_names
-  all_dfs = {sheet: data.parse(sheet) for sheet in sheet_names}
+#  xl_file = 'DataDownload.xls'
+#  data = pd.ExcelFile(xl_file)
+#  sheet_names = data.sheet_names
+#  all_dfs = {sheet: data.parse(sheet) for sheet in sheet_names}
 
-  restaurants_df = all_dfs['RESTAURANTS']
-  restaurants_df = restaurants_df[['State','County','PC_FFRSALES07','PC_FSRSALES07']]
-  restaurants_df.columns = ['State','County','Per Capita Fast Food','Per Capita Full Service']
+#  restaurants_df = all_dfs['RESTAURANTS']
+#  restaurants_df = restaurants_df[['State','County','PC_FFRSALES07','PC_FSRSALES07']]
+#  restaurants_df.columns = ['State','County','Per Capita Fast Food','Per Capita Full Service']
   
-  socioec_df = all_dfs['SOCIOECONOMIC']
-  socioec_df = socioec_df[['State','County','POVRATE10']]
-  health_df = all_dfs['HEALTH']
-  health_df = health_df[['State','County','PCT_OBESE_ADULTS10']]
-  health_se_df = pd.merge(socioec_df,health_df,on=['State','County'])
-  health_se_df.columns = ['State','County','Poverty Rate','Adult Obesity Rate']
+#  socioec_df = all_dfs['SOCIOECONOMIC']
+#  socioec_df = socioec_df[['State','County','POVRATE10']]
+#  health_df = all_dfs['HEALTH']
+#  health_df = health_df[['State','County','PCT_OBESE_ADULTS10']]
+#  health_se_df = pd.merge(socioec_df,health_df,on=['State','County'])
+#  health_se_df.columns = ['State','County','Poverty Rate','Adult Obesity Rate']
 
-  insec_df = all_dfs['INSECURITY']
-  insec_df = insec_df[['State','County','FOODINSEC_10_12']]
-  insec_df.columns = ['State','County','PercInsecure']
+#  insec_df = all_dfs['INSECURITY']
+#  insec_df = insec_df[['State','County','FOODINSEC_10_12']]
+#  insec_df.columns = ['State','County','PercInsecure']
 
-  insecRes_df = pd.merge(insec_df,restaurants_df, on=['State','County'])
-  meals_df = pd.merge(health_se_df,insecRes_df,on = ['State','County'])
-  meals_df['Meals FF'] = meals_df['Per Capita Fast Food']/6.0
-  meals_df['Meals FS'] = meals_df['Per Capita Full Service']/12.0
+#  insecRes_df = pd.merge(insec_df,restaurants_df, on=['State','County'])
+#  meals_df = pd.merge(health_se_df,insecRes_df,on = ['State','County'])
+#  meals_df['Meals FF'] = meals_df['Per Capita Fast Food']/6.0
+#  meals_df['Meals FS'] = meals_df['Per Capita Full Service']/12.0
 
-  meals_df['Poverty Rate']=[x  if any([type(x) == int,type(x)==float]) else np.nan for x in meals_df['Poverty Rate']]
-  meals_df['Poverty Rate'] = np.float64(meals_df['Poverty Rate'])
+#  meals_df['Poverty Rate']=[x  if any([type(x) == int,type(x)==float]) else np.nan for x in meals_df['Poverty Rate']]
+#  meals_df['Poverty Rate'] = np.float64(meals_df['Poverty Rate'])
 
-  stateMeans = meals_df.groupby('State').mean()
-  stateMeans['percentFF'] = 100*stateMeans['Meals FF']/(stateMeans['Meals FF'] + stateMeans['Meals FS'])
+#  stateMeans = meals_df.groupby('State').mean()
+#  stateMeans['percentFF'] = 100*stateMeans['Meals FF']/(stateMeans['Meals FF'] + stateMeans['Meals FS'])
 
-  data = ColumnDataSource(data=dict(percentFF = stateMeans['percentFF'],povRate = stateMeans['Poverty Rate'],state = stateMeans.index))
-
+#  data = ColumnDataSource(data=dict(percentFF = stateMeans['percentFF'],povRate = stateMeans['Poverty Rate'],state = stateMeans.index))
+  use_data2 = pickle.load(open('fig4bdata.p','rb'))
+    
   hover = HoverTool(tooltips = [('State','@state')])
-  plot2 = figure(title = 'More meals "out" at fast food restaurants correlates with higher poverty',title_text_font_size='12pt', x_axis_label = 'Percent of meals "out" at fast food',y_axis_label = 'Poverty Rate',tools=[hover])
-  plot2.scatter('percentFF','povRate',size=10,source = data)
+  plot2 = figure(
+      title = 'More meals "out" at fast food restaurants correlates with higher obesity',
+      title_text_font_size='12pt', 
+      x_axis_label = 'Percent of meals "out" at fast food',
+      y_axis_label = 'Obesity Rate',tools=[hover])
+  plot2.scatter('percentFF','obesityRate',size=10,source = use_data2)
 
   script, div = components(plot2,CDN)
   return render_template('myplot.html', page_title=page_title, script=script, div=div)
 
 if __name__ == '__main__':
-  app.run(port=33507, debug=True)
+  app.run(port=33507)
