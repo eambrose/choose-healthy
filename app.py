@@ -240,4 +240,4 @@ def food_choice():
   return render_template('myplot.html', page_title=page_title, script=script, div=div)
 
 if __name__ == '__main__':
-  app.run(port=33507)
+  app.run(port=33507, debug=True)
