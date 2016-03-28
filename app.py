@@ -13,11 +13,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-  return redirect("/poverty_health")
+  #return redirect("/welcome")
+  page_title='Choose Healthy'
+  pagetext='Welcome to Choose Healthy ... development in progress'
+  return render_template('welcome.html', page_title=page_title,pagetext=pagetext)
 
-@app.route('/poverty_health')
-def poverty_health():
-  page_title = "Poverty and health"
+@app.route('/background')
+def background():
+  page_title = "Background"
 
   health_se_df = pickle.load(open('fig1data.p','rb'))
   health_se_df['Poverty Rate'] = np.float64(health_se_df['Poverty Rate'])
@@ -46,39 +49,27 @@ def poverty_health():
   vals_X2 = range(np.int(round(mx_X2)))
   vals_Y2 = regr2[0]*np.float64(vals_X2) + regr2[1]
   plot2.line(vals_X2,vals_Y2,color='red',line_width=1.5)
-
-  p=gridplot([[plot,plot2]])
-  script, div = components(p,CDN)
-  script=script.strip()
-  return render_template('myplot.html', page_title=page_title, script=script, div=div)
-
-@app.route('/vendor_availability')
-def vendor_availability():
-  page_title = "Vendor availability"
+  p0=gridplot([[plot,plot2]])
+  script0, div0 = components(p0,CDN)
+    
   percentile_means_df = pickle.load(open('fig2data.p','rb'))
     
-  p = Line(percentile_means_df,  x='percentile',
+  p1 = Line(percentile_means_df,  x='percentile',
             y=['Grocery Store',
-               'Supercenter',
+              # 'Supercenter',
                'Convenience Store',
-               'Specialty Store',
-              'SNAPS Authorized Store',
-               'WIC Authorized Store',
+              # 'Specialty Store',
+             # 'SNAPS Authorized Store',
+             #  'WIC Authorized Store',
                'Fast Food Restaurant',
-               'Full Service Restaurant'],legend='top_left',
+               'Full Service Restaurant'],legend='bottom_left',
             xlabel='Poverty Rate by Percentile',
             ylabel='Stores per 1000 People',
-            xgrid=False,title='Change in food vendors as poverty rate increases - US counties, 2012',
-color=['Aqua','CornflowerBlue','Blue','BlueViolet','Coral','Crimson','Green','HotPink'],
-          plot_width=750, plot_height=400)
-
-  script, div = components(p,CDN)
-  return render_template('myplot.html', page_title=page_title, script=script, div=div)
-
-
-@app.route('/predict_obesity')
-def predict_obesity():
-  page_title = "Predict Obesity"
+            xgrid=False,
+color=['Aqua','CornflowerBlue','Blue','BlueViolet'],#,'Coral','Crimson','Green','HotPink'],
+          plot_width=500, plot_height=600)
+  script1,div1 = components(p1,CDN)
+    
   scores = np.load('scores_file.npy')
   lowci = np.percentile(scores,2.5,axis=0)
   highci = np.percentile(scores,97.5,axis=0)
@@ -89,7 +80,7 @@ def predict_obesity():
   highci_svm = np.percentile(scores_svm,97.5,axis=0)
   CIs_svm = np.matrix([lowci_svm,highci_svm])
 
-  p1 = figure(title='Predicting obesity from poverty, food access, food availability (logistic)',title_text_font_size='12pt',plot_width=500, plot_height=400)
+  p1 = figure(title='Predicting obesity from poverty, food access, food availability (logistic)',title_text_font_size='12pt',plot_width=550, plot_height=400)
   p1.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
   p1.multi_line(xs=[[1,1],[2,2],[3,3],[4,4]],ys=[CIs[:,0],CIs[:,1],CIs[:,2],CIs[:,3]],line_width = 4)
   p1.circle(x=[1,2,3,4],y=scores.mean(axis=0),size=10,color='red')
@@ -102,7 +93,7 @@ def predict_obesity():
   p1.text(2.7,.51,['Drop access'],text_font_size='10pt')
   p1.text(3.6,.51,['Drop availablity'],text_font_size='10pt')
 
-  p2 = figure(title='Predict obesity from poverty, food access, food availability (SVM)',title_text_font_size = '12pt',plot_width=500,plot_height=400)
+  p2 = figure(title='Predict obesity from poverty, food access, food availability (SVM)',title_text_font_size = '12pt',plot_width=550,plot_height=400)
   p2.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
   p2.multi_line(xs=[[1,1],[2,2],[3,3],[4,4]],ys=[CIs_svm[:,0],CIs_svm[:,1],CIs_svm[:,2],CIs_svm[:,3]],line_width=4)
   p2.circle(x=[1,2,3,4],y=scores_svm.mean(axis=0),size=10,color='red')
@@ -116,25 +107,28 @@ def predict_obesity():
   p2.text(3.6,.51,['Drop availability'], text_font_size='10pt')
 
   p = gridplot([[p1,p2]])
-  script, div = components(p,CDN)
-  return render_template('myplot.html', page_title=page_title, script=script, div=div)
+  script2, div2 = components(p,CDN)
 
-
-@app.route('/food_choice')
-def food_choice():
-  page_title = "Food choice"
   use_data2 = pickle.load(open('fig4bdata.p','rb'))
     
   hover = HoverTool(tooltips = [('State','@state')])
   plot2 = figure(
-      title = 'More meals "out" at fast food restaurants correlates with higher obesity',
       title_text_font_size='12pt', 
       x_axis_label = 'Percent of meals "out" at fast food',
       y_axis_label = 'Obesity Rate',tools=[hover],plot_width=500,plot_height=400)
   plot2.scatter('percentFF','obesityRate',size=10,source = use_data2)
 
-  script, div = components(plot2,CDN)
-  return render_template('myplot.html', page_title=page_title, script=script, div=div)
+  script3,div3 = components(plot2,CDN)
+    
+  return render_template('backgroundpage.html',page_title=page_title,script0=script0,div0=div0,script1=script1,script2=script2,div1=div1,div2=div2,script3=script3,div3=div3)
+
+
+@app.route('/grocerylist')
+def grocerylist():
+  page_title = "Grocery List"
+  pagetext = 'Come back soon for help making a smart grocery list!'
+  return render_template('grocerylist.html', page_title=page_title, pagetext=pagetext)
+
 
 if __name__ == '__main__':
-  app.run(port=33507)
+  app.run(port=33507,debug=True)
