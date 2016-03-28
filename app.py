@@ -13,10 +13,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-  return redirect("/background")
-  #page_title='Choose Healthy'
-  #pagetext='Welcome to Choose Healthy ... development in progress'
-  #return render_template('welcome.html', page_title=page_title,pagetext=pagetext)
+  return redirect("/welcome")
+
+@app.route('/welcome')
+def welcome():
+  page_title='Choose Healthy'
+  pagetext='Welcome to Choose Healthy ... development in progress'
+  return render_template('welcome.html', page_title=page_title,pagetext=pagetext)
 
 @app.route('/background')
 def background():
