@@ -33,11 +33,20 @@ li a:hover {
  <body>
 <body>
 <ul>
-  <li><a href="/welcome">Welcome to Choose Healthy</a></li>
-  <li><a href="/background">Background</a></li>
-  <li><a href="/grocerylist">Let's make a grocery list!</a></li>
+  <li style='font-size:20px'><a href="/welcome">Welcome to Choose Healthy</a></li>
+  <li style='font-size:20px'><a href="/background">Background</a></li>
+  <li style='font-size:20px'><a href="/grocerylist">Let's make a grocery list!</a></li>
 </ul>
 </body> 
      <p align='center'> {{pagetext}}</p>
+     
+     <div>
+        <h1>Enter an ingredient</h1>
+            <form id='ingredient of interest' method='post' action='grocerylist'>
+                <p> Ingredient:<input type='text' name='ingred_of_int'/>
+            </p>
+                <p><input type='submit' value='Go!'/>
+                </p>
+     </div>
  </body>
 </html>

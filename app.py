@@ -18,7 +18,7 @@ def main():
 @app.route('/welcome')
 def welcome():
   page_title='Choose Healthy'
-  pagetext='Welcome to Choose Healthy ... development in progress'
+  pagetext='You can\'t control everything about your health ... Take advantage of what you can control'
   return render_template('welcome.html', page_title=page_title,pagetext=pagetext)
 
 @app.route('/background')
@@ -69,8 +69,9 @@ def background():
             xlabel='Poverty Rate by Percentile',
             ylabel='Stores per 1000 People',
             xgrid=False,
-color=['Aqua','CornflowerBlue','Blue','BlueViolet'],#,'Coral','Crimson','Green','HotPink'],
+color=['Aqua','CornflowerBlue','Coral','Green'],
           plot_width=500, plot_height=600)
+
   script1,div1 = components(p1,CDN)
     
   scores = np.load('scores_file.npy')
@@ -91,10 +92,10 @@ color=['Aqua','CornflowerBlue','Blue','BlueViolet'],#,'Coral','Crimson','Green',
   p1.ygrid.grid_line_color = None
   p1.xaxis.major_label_text_color = None
   p1.yaxis.axis_label = "Classifier accuracy"
-  p1.text(.7,.51,['All variables'],text_font_size='10pt')
-  p1.text(1.55,.51,['Drop poverty rate'],text_font_size='10pt')
-  p1.text(2.7,.51,['Drop access'],text_font_size='10pt')
-  p1.text(3.6,.51,['Drop availablity'],text_font_size='10pt')
+  p1.text(.65,.51,['All variables'],text_font_size='10pt')
+  p1.text(1.5,.51,['Drop poverty rate'],text_font_size='10pt')
+  p1.text(2.65,.51,['Drop access'],text_font_size='10pt')
+  p1.text(3.55,.51,['Drop availablity'],text_font_size='10pt')
 
   p2 = figure(title='Predict obesity from poverty, food access, food availability (SVM)',title_text_font_size = '12pt',plot_width=550,plot_height=400)
   p2.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
@@ -104,10 +105,10 @@ color=['Aqua','CornflowerBlue','Blue','BlueViolet'],#,'Coral','Crimson','Green',
   p2.ygrid.grid_line_color = None
   p2.xaxis.major_label_text_color = None
   p2.yaxis.axis_label = "Classifier accuracy"
-  p2.text(.7,.51,['All variables'],text_font_size='10pt')
-  p2.text(1.55,.51,['Drop poverty rate'],text_font_size='10pt')
-  p2.text(2.7,.51,['Drop access'],text_font_size='10pt')
-  p2.text(3.6,.51,['Drop availability'], text_font_size='10pt')
+  p2.text(.65,.51,['All variables'],text_font_size='10pt')
+  p2.text(1.5,.51,['Drop poverty rate'],text_font_size='10pt')
+  p2.text(2.65,.51,['Drop access'],text_font_size='10pt')
+  p2.text(3.55,.51,['Drop availability'], text_font_size='10pt')
 
   p = gridplot([[p1,p2]])
   script2, div2 = components(p,CDN)
@@ -126,12 +127,21 @@ color=['Aqua','CornflowerBlue','Blue','BlueViolet'],#,'Coral','Crimson','Green',
   return render_template('backgroundpage.html',page_title=page_title,script0=script0,div0=div0,script1=script1,script2=script2,div1=div1,div2=div2,script3=script3,div3=div3)
 
 
-@app.route('/grocerylist')
+@app.route('/grocerylist', methods=['GET','POST'])
 def grocerylist():
-  page_title = "Grocery List"
-  pagetext = 'Come back soon for help making a smart grocery list!'
-  return render_template('grocerylist.html', page_title=page_title, pagetext=pagetext)
+  page_title = "Let's start a grocery list"
+  pagetext = 'Enter an ingredient and we\'ll show you other ingredients you\'ll need to make popular recipes'
+  if request.method=='GET':
+      return render_template('grocerylist.html', page_title=page_title, pagetext=pagetext)
+  else:
+      ingred_of_int = request.form['ingred_of_int']
+      return redirect('/newlist/'+ingred_of_int)
 
+@app.route('/newlist/<ingred_of_int>', methods=['GET','POST'])
+def newlist(ingred_of_int):
+  page_title = "Here's your new grocery list"
+  pagetext = 'You picked ' + ingred_of_int + ' but I haven\'t finished this page yet so here\'s a picture of my dog!'
+  return render_template('newlist.html', page_title=page_title, pagetext=pagetext)
 
 if __name__ == '__main__':
-  app.run(port=33507)
+  app.run(port=33507,debug = True)
