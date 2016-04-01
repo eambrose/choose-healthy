@@ -1,50 +1,5 @@
-<html lang="en">
- <head>
-  <meta charset="utf-8">
-  <title>{{page_title}}</title>
-<style>
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #81F79F;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: inline-block;
-    color: #6E6E6E;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #01DF74;
-}
-</style>
-
-  <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.11.0.min.css" type="text/css"/>
-  <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.11.0.min.js"></script>
-     {{script0|safe}}
-     {{script1|safe}}
-     {{script2|safe}}
-     {{script3|safe}}
- </head>
-
- <body>
-<body>
-<ul>
-  <li style='font-size:20px'><a href="/welcome">Welcome to Choose Healthy</a></li>
-  <li style='font-size:20px'><a href="/background">Background</a></li>
-  <li style='font-size:20px'><a href="/grocerylist">Let's make a grocery list!</a></li>
-</ul>
-
-     </body> 
+{% extends "base.html" %}
+{% block content %}
      <h2 align = 'center'> While investigating the impact of <a href="https://en.wikipedia.org/wiki/Food_desert">food deserts</a> on community health, we noticed that food access isn't the most important contributor to healthy eating. Here's the story:</h2>
      
           <br><br>
@@ -80,5 +35,5 @@ li a:hover {
      <br><br><br> <br> <br>
      <p align='right'> Data from the <a href="http://www.ers.usda.gov/data-products/food-environment-atlas.aspx">USDA's Food Environment Atlas</a>
  </body>
-</html>
+{% endblock%}
 
