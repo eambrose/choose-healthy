@@ -1,14 +1,53 @@
 {% extends "base.html" %}
 {% block content %}
-     <p align='center'> {{pagetext}}</p>
      
+<table>
+    <tr>
+     <td width='60%'> 
+         <br>
+         <h3 align='center'> {{pagetext}}</h3>
+         <br>
+         <br>
      <div align = 'center'>
         <h1>Enter an ingredient</h1>
+         <br>
             <form id='ingredient of interest' method='post' action='grocerylist'>
                 <p> Ingredient:<input type='text' name='ingred_of_int'/>
             </p>
                 <p><input type='submit' value='Go!'/>
                 </p>
      </div>
+         </td>
+         <td class = 'col'>
+            <table align='center'>
+                <tr>
+                    <td>
+                        <br>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td align='center'>
+                        <h4 align='center'>
+                        {{pagetext2}}
+                        </h4>
+
+                          <br>
+                    </td>
+                </tr>
+                <tr>
+{% for item in top_ingreds %}    
+
+              <td align='center'>
+                    
+{{ item }}
+                </td>
+            </tr>
+{% endfor %}
+            </table>
+        </td>
+    </tr>
+</table>
 
 {% endblock %}

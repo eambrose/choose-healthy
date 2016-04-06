@@ -1,27 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
-<h3>{{pagetext}}</h3>
 
-<table>
+<style>
+    h3 { display:inline;}
+    #maintable {width:90%;
+               align:center}
+    .col {width:50%;}
+</style>
+<br>
+<br>
+<table id='maintable'>
     <tr>
-        <td>
-            <table>
-{% for item in grocery_list %}
-            <tr>
-                <td>
+        <td class='col'>
+            <table align='center'>
+                <tr>
+
+                    <td align='center'>
+                        <h4 align='center'>
+                        {{pagetext}}
+                        </h4>
+                          <br>
+                    </td>
+                </tr>
+                <tr>
+{% for item in grocery_list %}    
+
+              <td align='center'>
+                    
 {{ item }}
                 </td>
             </tr>
 {% endfor %}
             </table>
         </td>
-        <td>
-            <img src='/static/IMG_0145.jpg' height = 326 width = 250 align = 'middle' background = transparent>
+        <td class='col'>
+            <table align='center'>
+                <tr>
+                    <td>
+                        <br>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+            <img src='/static/IMG_0145.jpg' height = 326 width = 250 align = 'middle' background = transparent> 
+                    </td>
+                </tr>
+            </table>
         </td>
+        
     </tr>
 </table>
-             <h3 align = 'center'>
-                 <a href='/grocerylist'> Pick another ingredient </a>
+
+<br>
+<br>
+     <h3 align = 'center'>
+         <a href='/grocerylist'> Pick another ingredient </a>
      </h3>
 
      

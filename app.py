@@ -28,7 +28,7 @@ def background():
 
   health_se_df = pickle.load(open('fig1data.p','rb'))
   health_se_df['Poverty Rate'] = np.float64(health_se_df['Poverty Rate'])
-  plot = figure(plot_width=500, plot_height=400,x_axis_label='Poverty Rate',y_axis_label='Adult Obesity Rate',title='Obesity increases with poverty rate - US counties 2010',title_text_font_size='12pt')
+  plot = figure(plot_width=400, plot_height=325,x_axis_label='Poverty Rate',y_axis_label='Adult Obesity Rate',title='Obesity increases with poverty rate - US counties 2010',title_text_font_size='12pt')
   plot.scatter(health_se_df['Poverty Rate'],health_se_df['Adult Obesity Rate'],marker='+',color='DarkSlateGray')
   plot.xaxis.axis_label_text_font_size='9pt'
   plot.yaxis.axis_label_text_font_size='9pt'
@@ -42,7 +42,7 @@ def background():
 
   plot.line(vals_X,vals_Y,color='red',line_width=1.5)
 
-  plot2 = figure(plot_width=500, plot_height=400,x_axis_label='Poverty Rate', y_axis_label='Adult Diabetes Rate', title='Diabetes increases with poverty rate - US counties 2010', title_text_font_size='12pt')
+  plot2 = figure(plot_width=400, plot_height=325,x_axis_label='Poverty Rate', y_axis_label='Adult Diabetes Rate', title='Diabetes increases with poverty rate - US counties 2010', title_text_font_size='12pt')
   plot2.scatter(health_se_df['Poverty Rate'],health_se_df['Adult Diabetes Rate'], marker='+',color='DarkSlateBlue')
   plot2.xaxis.axis_label_text_font_size='9pt'
   plot2.yaxis.axis_label_text_font_size='9pt'
@@ -71,7 +71,7 @@ def background():
             ylabel='Stores per 1000 People',
             xgrid=False,
 color=['Aqua','CornflowerBlue','Coral','Green'],
-          plot_width=500, plot_height=600)
+          plot_width=500, plot_height=500)
 
   script1,div1 = components(p1,CDN)
     
@@ -85,7 +85,7 @@ color=['Aqua','CornflowerBlue','Coral','Green'],
   highci_svm = np.percentile(scores_svm,97.5,axis=0)
   CIs_svm = np.matrix([lowci_svm,highci_svm])
 
-  p1 = figure(title='Predicting obesity from poverty, food access, food availability (logistic)',title_text_font_size='12pt',plot_width=550, plot_height=400)
+  p1 = figure(title='Predicting obesity (logistic regression)',title_text_font_size='12pt',plot_width=400, plot_height=325,x_range=(.4,4.4))
   #p1.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=#['red','blue','blue','blue'])
   p1.multi_line(xs=[[1,1],[2,2],[3,3],[4,4]],ys=[CIs[:,0],CIs[:,1],CIs[:,2],CIs[:,3]],line_width = 4)
   p1.circle(x=[1,2,3,4],y=scores.mean(axis=0),size=10,color='red')
@@ -93,12 +93,12 @@ color=['Aqua','CornflowerBlue','Coral','Green'],
   p1.ygrid.grid_line_color = None
   p1.xaxis.major_label_text_color = None
   p1.yaxis.axis_label = "Classifier accuracy"
-  p1.text(.65,.51,['All variables'],text_font_size='10pt')
-  p1.text(1.5,.51,['Drop poverty rate'],text_font_size='10pt')
-  p1.text(2.65,.51,['Drop access'],text_font_size='10pt')
-  p1.text(3.55,.51,['Drop availablity'],text_font_size='10pt')
+  p1.text(.75,.51,['Full'],text_font_size='10pt')
+  p1.text(1.5,.51,['Poverty'],text_font_size='10pt')
+  p1.text(2.65,.51,['Access'],text_font_size='10pt')
+  p1.text(3.55,.51,['# Stores'],text_font_size='10pt')
 
-  p2 = figure(title='Predict obesity from poverty, food access, food availability (SVM)',title_text_font_size = '12pt',plot_width=550,plot_height=400)
+  p2 = figure(title='Predict obesity (SVM)',title_text_font_size = '12pt',plot_width=400,plot_height=325,x_range=(.4,4.4))
   #p2.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
   p2.multi_line(xs=[[1,1],[2,2],[3,3],[4,4]],ys=[CIs_svm[:,0],CIs_svm[:,1],CIs_svm[:,2],CIs_svm[:,3]],line_width=4)
   p2.circle(x=[1,2,3,4],y=scores_svm.mean(axis=0),size=10,color='red')
@@ -106,10 +106,10 @@ color=['Aqua','CornflowerBlue','Coral','Green'],
   p2.ygrid.grid_line_color = None
   p2.xaxis.major_label_text_color = None
   p2.yaxis.axis_label = "Classifier accuracy"
-  p2.text(.65,.51,['All variables'],text_font_size='10pt')
-  p2.text(1.5,.51,['Drop poverty rate'],text_font_size='10pt')
-  p2.text(2.65,.51,['Drop access'],text_font_size='10pt')
-  p2.text(3.55,.51,['Drop availability'], text_font_size='10pt')
+  p2.text(.75,.51,['Full'],text_font_size='10pt')
+  p2.text(1.5,.51,['Poverty'],text_font_size='10pt')
+  p2.text(2.65,.51,['Access'],text_font_size='10pt')
+  p2.text(3.55,.51,['# Stores'], text_font_size='10pt')
 
   p = gridplot([[p1,p2]])
   script2, div2 = components(p,CDN)
@@ -132,8 +132,10 @@ color=['Aqua','CornflowerBlue','Coral','Green'],
 def grocerylist():
   page_title = "Let's start a grocery list"
   pagetext = 'Enter an ingredient and we\'ll show you other ingredients you\'ll need to make popular recipes'
+  pagetext2 = 'These are good to have on hand:'
+  top_ingreds = pickle.load(open('top_ingreds.p','rb'))
   if request.method=='GET':
-      return render_template('grocerylist.html', page_title=page_title, pagetext=pagetext)
+      return render_template('grocerylist.html', page_title=page_title, pagetext=pagetext,top_ingreds=top_ingreds,pagetext2=pagetext2)
   else:
       ingred_of_int = request.form['ingred_of_int']
       return redirect('/newlist/'+ingred_of_int)
@@ -143,10 +145,11 @@ def newlist(ingred_of_int):
   page_title = "Here's your new grocery list"
   pagetext = 'Here are some ingredients that go well with ' + ingred_of_int + ':'
   ingred_pairs = pickle.load(open('ingred_pairs.p','rb'))
+  top_ingreds = pickle.load(open('top_ingreds.p','rb'))
   pick_pairs = list(itertools.ifilter(lambda x: ingred_of_int in x, ingred_pairs))
   grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != ingred_of_int else pick_pairs[x][1] for x in range(len(pick_pairs))]
-  grocery_list = grocery_list[:15]
+  grocery_list = [x for x in grocery_list if x not in top_ingreds][:15]
   return render_template('newlist.html', page_title=page_title, pagetext=pagetext, grocery_list=grocery_list)
 
 if __name__ == '__main__':
-  app.run(port=33507,debug = True)
+  app.run(port=33507)
