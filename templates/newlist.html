@@ -1,46 +1,28 @@
-<html lang="en">
- <head>
-  <meta charset="utf-8">
-  <title>{{page_title}}</title>
-<style>
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #81F79F;
-}
+{% extends "base.html" %}
+{% block content %}
+<h3>{{pagetext}}</h3>
 
-li {
-    float: left;
-}
+<table>
+    <tr>
+        <td>
+            <table>
+{% for item in grocery_list %}
+            <tr>
+                <td>
+{{ item }}
+                </td>
+            </tr>
+{% endfor %}
+            </table>
+        </td>
+        <td>
+            <img src='/static/IMG_0145.jpg' height = 326 width = 250 align = 'middle' background = transparent>
+        </td>
+    </tr>
+</table>
+             <h3 align = 'center'>
+                 <a href='/grocerylist'> Pick another ingredient </a>
+     </h3>
 
-li a {
-    display: inline-block;
-    color: #6E6E6E;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #01DF74;
-}
-</style>
-
- </head>
-
- <body>
-<body>
-<ul>
-  <li style='font-size:20px'><a href="/welcome">Welcome to Choose Healthy</a></li>
-  <li style='font-size:20px'><a href="/background">Background</a></li>
-  <li style='font-size:20px'><a href="/grocerylist">Let's make a grocery list!</a></li>
-</ul>
-</body> 
-     <h2 align='center'> {{pagetext}}</h2>
-
-     <img src='/static/IMG_0145.jpg' height = 326 width = 250 align = 'middle'>
-
- </body>
-</html>
+     
+{% endblock %}

@@ -8,6 +8,7 @@ from bokeh.models import HoverTool
 import pandas as pd
 import numpy as np
 import pickle
+import itertools
 
 app = Flask(__name__)
 
@@ -18,7 +19,7 @@ def main():
 @app.route('/welcome')
 def welcome():
   page_title='Choose Healthy'
-  pagetext='You can\'t control everything about your health ... Take advantage of what you can control'
+  pagetext='You can\'t control everything about your health. Take advantage of something you can control: the food you eat.'
   return render_template('welcome.html', page_title=page_title,pagetext=pagetext)
 
 @app.route('/background')
@@ -85,7 +86,7 @@ color=['Aqua','CornflowerBlue','Coral','Green'],
   CIs_svm = np.matrix([lowci_svm,highci_svm])
 
   p1 = figure(title='Predicting obesity from poverty, food access, food availability (logistic)',title_text_font_size='12pt',plot_width=550, plot_height=400)
-  p1.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
+  #p1.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=#['red','blue','blue','blue'])
   p1.multi_line(xs=[[1,1],[2,2],[3,3],[4,4]],ys=[CIs[:,0],CIs[:,1],CIs[:,2],CIs[:,3]],line_width = 4)
   p1.circle(x=[1,2,3,4],y=scores.mean(axis=0),size=10,color='red')
   p1.xgrid.grid_line_color = None
@@ -98,7 +99,7 @@ color=['Aqua','CornflowerBlue','Coral','Green'],
   p1.text(3.55,.51,['Drop availablity'],text_font_size='10pt')
 
   p2 = figure(title='Predict obesity from poverty, food access, food availability (SVM)',title_text_font_size = '12pt',plot_width=550,plot_height=400)
-  p2.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
+  #p2.quad(top=.7,bottom=.5,left=[.55,1.55,2.55,3.55],right=[1.45,2.45,3.45,4.45],alpha=.2,color=['red','blue','blue','blue'])
   p2.multi_line(xs=[[1,1],[2,2],[3,3],[4,4]],ys=[CIs_svm[:,0],CIs_svm[:,1],CIs_svm[:,2],CIs_svm[:,3]],line_width=4)
   p2.circle(x=[1,2,3,4],y=scores_svm.mean(axis=0),size=10,color='red')
   p2.xgrid.grid_line_color = None
@@ -140,8 +141,12 @@ def grocerylist():
 @app.route('/newlist/<ingred_of_int>', methods=['GET','POST'])
 def newlist(ingred_of_int):
   page_title = "Here's your new grocery list"
-  pagetext = 'You picked ' + ingred_of_int + ' but I haven\'t finished this page yet so here\'s a picture of my dog!'
-  return render_template('newlist.html', page_title=page_title, pagetext=pagetext)
+  pagetext = 'Here are some ingredients that go well with ' + ingred_of_int + ':'
+  ingred_pairs = pickle.load(open('ingred_pairs.p','rb'))
+  pick_pairs = list(itertools.ifilter(lambda x: ingred_of_int in x, ingred_pairs))
+  grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != ingred_of_int else pick_pairs[x][1] for x in range(len(pick_pairs))]
+  grocery_list = grocery_list[:15]
+  return render_template('newlist.html', page_title=page_title, pagetext=pagetext, grocery_list=grocery_list)
 
 if __name__ == '__main__':
   app.run(port=33507,debug = True)

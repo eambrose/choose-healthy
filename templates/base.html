@@ -2,29 +2,34 @@
  <head>
   <meta charset="utf-8">
   <title>{{page_title}}</title>
+     <link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" media="screen" />
 <style>
 ul {
+    background:transparent;
+    text-align:center;
+}
+li {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #81F79F;
+    background-color: #C3FDB8;
 }
 
 li {
-    float: left;
+    display:inline-block;
 }
 
 li a {
     display: inline-block;
-    color: #6E6E6E;
+    color: #48CCCD;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
 li a:hover {
-    background-color: #01DF74;
+    background-color: #98FF98;
 }
 </style>
 
@@ -36,7 +41,7 @@ li a:hover {
   <li style='font-size:20px'><a href="/grocerylist">Let's make a grocery list!</a></li>
 </ul>
 </body> 
-    <div class='block-content'>
+    <div class='block-content' align = 'center'>
     {% block content %}
         {% endblock %}
     </div>
