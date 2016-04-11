@@ -2,10 +2,12 @@
 {% block content%}
 <style>
     body {
-    margin-top: 0px;
-    margin-bottom: 50px;
-    margin-right: 80px;
-    margin-left: 80px;
+    background-position: center top;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),  url('../static/berries.jpg');
+    width: 100%;
+    background-repeat: repeat;
+    margin-top: 100px; 
+
 }
 </style>
 <head>
@@ -13,51 +15,68 @@
   <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.11.0.min.css" type="text/css"/>
   <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.11.0.min.js"></script>
      {{script0|safe}}
-     {{script1|safe}}
-     {{script2|safe}}
+     {{script1a|safe}}
+     {{script1b|safe}}
+     {{script2a|safe}}
+     {{script2b|safe}}
      {{script3|safe}}
  </head>
 
  <body><br>
-     <h2 align = 'center'> While investigating the impact of <a href="https://en.wikipedia.org/wiki/Food_desert">food deserts</a> on community health, we noticed that food access isn't the most important contributor to healthy eating. Here's the story:</h2>
-     
-          <br><br><br>
-     <h3 align='center'> The poverty level in your community impacts the kind of food you have access to, and poorer communities have worse health in general.  </h3>
-     <br><br>
-     <h4 align='center'>The number of stores and restaurants in a community varies with poverty level.<h4>
-
-  <div class='bokeh' align='center'>
-  {{div1|safe}}
+     <table>
+         <tr>
+             <td width='5%'>
+            </td>
+            <td width='90%'>
+     <h2 align = 'center'> While investigating the impact of <a href="https://en.wikipedia.org/wiki/Food_desert" style='color:#ffe87c'>food deserts</a> on community health, we noticed that food access isn't the most important contributor to healthy eating. Here's the story:</h2>
+                <br><br><br>
+                     <h3 align='center'> The poverty level in your community impacts the kind of food you have access to, and poorer communities have worse health in general.  </h3>
+                
+                   <br><br>
+                   <h4 align='center'>The number of stores and restaurants in a community varies with poverty level.</h4>
+                
+                  <div class='bokeh' align='center'>
+  {{div0|safe}}         
   </div>
-     <br><br><br>
-     <h4 align = 'center'> And higher poverty communities have higher rates of obesity and diabetes. </h4>
-  <div class='bokeh' align='center'>
-  {{div0|safe}}
+                <br><br><br>
+                <h4 align = 'center'> And higher poverty communities have higher rates of obesity and diabetes. </h4>
+                
+              <div class='bokeh' align='center'>
+  {{div1a|safe}}
      </div>
-
-     <br><br><br> <br> <br>
-
-     <h3 align='center'>This health discrepancy is not explained by food access and grocery store availability.</h3>
-         <br> <br>
-     <h4 align='center'>Removing food access or store availability from the model does not decrease obesity prediction accuracy. On the other hand, poverty strongly contributes to the model.</h4>
-  <div class='bokeh' align='center'>
-   {{div2|safe}}
+                <div class='bokeh' align='center'>
+  {{div1b|safe}}
+     </div>
+               <br><br><br> <br> <br>
+                     <h3 align='center'>This health discrepancy is not explained by food access and grocery store availability.</h3>
+                <br> <br>
+                <h4 align='center'>Removing food access or store availability from the model does not decrease obesity prediction accuracy. On the other hand, poverty strongly contributes to the model.</h4>
+                
+                  <div class='bokeh' align='center'>
+   {{div2a|safe}}
+  </div>
+                <div class='bokeh' align='center'>
+   {{div2b|safe}}
   </div>
      <br><br><br> <br> <br>
-     
-     <h3 align='center'>In communities with high obesity, more people are opting for fast food meals.
+                <h3 align='center'>In communities with high obesity, more people are opting for fast food meals.
      </h3>
-     <h4 align='center'>(hover over graph to see how your state stacks up)</h4>
-  <div class='bokeh' align='center'>
+                <h4 align='center'>(hover over graph to see how your state stacks up)</h4>
+                  <div class='bokeh' align='center'>
    {{div3|safe}}
   </div>
-     <br><br><br> <br> <br>
-     <h3 align='center'>Food access and food availability are not as important as the choice that we make about what food to eat.
+           <br><br><br> <br> <br>
+                <h3 align='center'>Food access and food availability are not as important as the choice that we make about what food to eat.
          Usually these choices are based on time, cost, and convenience. </h3>
      <br>
-     <h3 align = 'center'> Let us help you choose to eat healthier with tools designed to make cooking fast and easy. Get started with our <a href='/grocerylist'>Grocery List Builder</a></h3>
+     <h3 align = 'center'> Let us help you choose to eat healthier with tools designed to make cooking fast and easy. Get started with our <a href='/grocerylist' style='color:#ffe87c'>Grocery List Builder</a></h3>
      <br><br><br> <br> <br>
-     <h4 align='right'> Data from the <a href="http://www.ers.usda.gov/data-products/food-environment-atlas.aspx">USDA's Food Environment Atlas</a></h4>
+     <h4 align='right'> Data from the <a href="http://www.ers.usda.gov/data-products/food-environment-atlas.aspx" style='color:#ffe87c'>USDA's Food Environment Atlas</a></h4>
+             </td>
+             <td width='5%'>
+             </td>
+          </tr>
+     </table>
  </body>
 
 {% endblock%}

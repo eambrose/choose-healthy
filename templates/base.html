@@ -1,46 +1,81 @@
 <html lang="en">
  <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <title>{{page_title}}</title>
-     <link type="text/css" rel="stylesheet" href="/static/bootstrap.min.css" media="screen" />
 <style>
-ul {
-    background:transparent;
-    text-align:center;
-}
+
 li {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #C3FDB8;
+    background-color: #3b9c9c;
 }
 
 li {
     display:inline-block;
+
 }
 
 li a {
     display: inline-block;
-    color: #48CCCD;
+    color: #93ffe8;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+    font-size:150%;
 }
 
 li a:hover {
     background-color: #98FF98;
 }
+body {
+    background-position: center top;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),  url('../static/veggies.jpg');
+    height: 100%;
+    background-repeat: repeat;
+    margin-top: 100px; 
+}
+h1 {
+    color: #93ffe8;
+}
+h2 {
+    color: #93ffe8;
+}
+h3 {
+    color: #93ffe8;
+}
+h4 {
+    color: #93ffe8;
+}
+p {
+    color: #93ffe8;
+}
 </style>
 
  </head>
-    <body>
-<ul>
-  <li style='font-size:20px'><a href="/welcome">Welcome to Choose Healthy</a></li>
-  <li style='font-size:20px'><a href="/background">Background</a></li>
-  <li style='font-size:20px'><a href="/grocerylist">Let's make a grocery list!</a></li>
-</ul>
-</body> 
+
+ <nav class="navbar navbar-fixed-top nav-justified">
+          <ul class="navbar nav navbar-fixed_top nav-justified">
+            <li>
+              <a href="/welcome">Welcome</a>
+            </li>
+
+            <li >
+              <a href="/background">Background</a>
+            </li>
+
+            <li>
+              <a href="/grocerylist">Grocery List Builder</a>
+            </li>
+          </ul>
+</nav class="navbar navbar-fixed-top">
+
+
     <div class='block-content' align = 'center'>
     {% block content %}
         {% endblock %}

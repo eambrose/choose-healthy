@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-     
+<style>
+    body {
+    background-position: center top;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),  url('../static/carrots.jpg');
+    width: 100%;
+    background-repeat: repeat;
+    margin-top: 150px; 
+}
+</style>
+<body>     
 <table>
     <tr>
      <td width='60%'> 
@@ -12,10 +21,9 @@
         <h1>Enter an ingredient</h1>
          <br>
             <form id='ingredient of interest' method='post' action='grocerylist'>
-                <p> Ingredient:<input type='text' name='ingred_of_int'/>
-            </p>
-                <p><input type='submit' value='Go!'/>
-                </p>
+                <p> Ingredient:   <input type='text' style='color:black' name='ingred_of_int'/> <input type='submit' value='Go!' style='color:black'/>
+                    </p>
+                
      </div>
          </td>
          <td class = 'col'>
@@ -39,7 +47,7 @@
                 <tr>
 {% for item in top_ingreds %}    
 
-              <td align='center'>
+              <td align='center' style='color:#ffffcc;font-size:120%'>
                     
 {{ item }}
                 </td>
@@ -49,5 +57,11 @@
         </td>
     </tr>
 </table>
-
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4 align='right'> Recipes from <a href="http://food2fork.com/" style='color:#ffe87c'>Food2Fork</a></h4>
+</body>
 {% endblock %}
