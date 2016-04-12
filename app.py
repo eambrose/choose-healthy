@@ -67,6 +67,25 @@ def newlist(ingred_of_int):
   prices = pickle.load(open('prices.p','rb'))
   pick_pairs = list(itertools.ifilter(lambda x: ingred_of_int in x, ingred_pairs))
   grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != ingred_of_int else pick_pairs[x][1] for x in range(len(pick_pairs))]
+
+  if len(grocery_list) == 0:
+        if ingred_of_int[-1] == 'y':
+            try_ingred = ingred_of_int[:-1] + 'ies'
+            pick_pairs = list(itertools.ifilter(lambda x: try_ingred in x, ingred_pairs))
+            grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != try_ingred else pick_pairs[x][1] for x in range(len(pick_pairs))]
+        elif ingred_of_int[-3:] == 'ies':
+            try_ingred = ingred_of_int[:-3] + 'y'
+            pick_pairs = list(itertools.ifilter(lambda x: try_ingred in x, ingred_pairs))
+            grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != try_ingred else pick_pairs[x][1] for x in range(len(pick_pairs))]
+        elif ingred_of_int[-1] in ['a','i','o','u']:
+            try_ingred = ingred_of_int + 'es'
+            pick_pairs = list(itertools.ifilter(lambda x: try_ingred in x, ingred_pairs))
+            grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != try_ingred else pick_pairs[x][1] for x in range(len(pick_pairs))]
+        else:
+            try_ingred = ingred_of_int + 's'
+            pick_pairs = list(itertools.ifilter(lambda x: try_ingred in x, ingred_pairs))
+            grocery_list = [pick_pairs[x][0] if pick_pairs[x][0] != try_ingred else pick_pairs[x][1] for x in range(len(pick_pairs))]
+
   top_ingreds = [x[0] for x in top_ingreds]
   grocery_list = [x for x in grocery_list if x not in top_ingreds][:50]
   price_list = []
@@ -87,4 +106,4 @@ def newlist(ingred_of_int):
         
 
 if __name__ == '__main__':
-  app.run(port=33507, debug=True)
+  app.run(port=33507)
