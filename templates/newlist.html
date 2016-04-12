@@ -4,7 +4,7 @@
 <body>
 <table>
     <tr>
-        <td>
+        <td width=50%>
             <table align='center'>
                 <tr>
 
@@ -16,25 +16,78 @@
                     </td>
                 </tr>
                 <tr>
-{% for item in grocery_list %}    
 
-              <td align='center' style='color:#ffffcc;font-size:125%'>
-                    
-{{ item }}
-                </td>
+{% for price in price_list1 %}
+
+                    <td align='right' style='color:#ffffcc;font-size:125%'>
+                        {{price}}
+                    </td>
             </tr>
 {% endfor %}
+                <tr>
+                    <td align='right' style='color:#ffffcc;font-size:125%'>
+                        <br>
+                       * price may be outdated
+                        <br>
+                        <a href='#more' style='color:#93ffe8'> See more ingredients
+                    </a>
+                    </td>
+                </tr>
             </table>
         </td>
         
     </tr>
 </table>
 
-<br>
-<br>
+
      <h3 align = 'center'>
          <a href='/grocerylist' style='color:#ffe87c'> Pick another ingredient </a>
      </h3>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    
+    <table>
+    <tr>
+        <td width=50%>
+            <table align='center'>
+                <tr>
+                    <td align='center'>
+                        <a name='more'> </a>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <h4 align='center' style='font-size:150%'>
+                        Here's a longer version of the grocery list:
+                        </h4>
+                          <br>
+                    </td>
+                </tr>
+                <tr>
+
+{% for price in price_list2 %}
+
+                    <td align='right' style='color:#ffffcc;font-size:125%'>
+                        {{price}}
+                    </td>
+            </tr>
+{% endfor %}
+                <tr>
+                    <td align='right' style='color:#ffffcc;font-size:125%'>
+                        <br>
+                       * price may be outdated
+                    </td>
+                </tr>               
+            </table>
+        </td>
+        
+    </tr>
+</table>
+
 </body>
      
 {% endblock %}

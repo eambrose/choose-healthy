@@ -6,13 +6,17 @@
     background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),  url('../static/carrots.jpg');
     width: 100%;
     background-repeat: repeat;
-    margin-top: 150px; 
+    margin-top: 100px; 
 }
 </style>
-<body>     
+<body>  
+<div align='center' style='width:80%'>
+<h3 align='center'>We choose food based on time, cost, and convenience. Use this grocery list builder to get a head start on grocery shopping by picking ingredients that go well together, or that go well with food you already have at home and find out what you can expect to pay before you shop.</h3>
+    </div>
 <table>
     <tr>
      <td width='60%'> 
+         
          <br>
          <h3 align='center'> {{pagetext}}</h3>
          <br>
@@ -59,9 +63,7 @@
 </table>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <h4 align='right'> Recipes from <a href="http://food2fork.com/" style='color:#ffe87c'>Food2Fork</a></h4>
+    <h4 align='right' style='margin-right:20px'> Recipes from <a href="http://food2fork.com/" style='color:#ffe87c'>Food2Fork</a></h4>
+    <h4 align='right' style='margin-right:20px'> Prices from the <a href="http://www.bls.gov/cpi/" style='color:#ffe87c'>Consumer Price Index</a></h4>
 </body>
 {% endblock %}
